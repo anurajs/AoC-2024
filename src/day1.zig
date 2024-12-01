@@ -14,6 +14,7 @@ const Pair = struct {
 };
 
 pub fn solveDayOne() !void {
+    const allocator = gpa.allocator();
     var file = try std.fs.cwd().openFile("./problems/day1.txt", .{});
     defer file.close();
 
@@ -27,18 +28,19 @@ pub fn solveDayOne() !void {
 
     try file.seekTo(0);
 
-    const allocator = gpa.allocator();
     var left = try allocator.alloc(isize, line_count);
     var right = try allocator.alloc(isize, line_count);
     var pairs = try allocator.alloc(Pair, line_count);
     defer allocator.free(left);
     defer allocator.free(right);
     defer allocator.free(pairs);
-    var i: usize = 0;
+
     var left_map = std.AutoHashMap(isize, isize).init(allocator);
     var right_map = std.AutoHashMap(isize, isize).init(allocator);
     defer left_map.deinit();
     defer right_map.deinit();
+
+    var i: usize = 0;
     while (try in_stream.readUntilDelimiterOrEof(&buf, '\n')) |line| : (i += 1) {
         var splits = std.mem.split(u8, line, "   ");
         const left_str = splits.next().?;
@@ -59,8 +61,10 @@ pub fn solveDayOne() !void {
         left_entry.value_ptr.* += 1;
         right_entry.value_ptr.* += 1;
     }
+
     std.mem.sort(isize, left, {}, comptime std.sort.asc(isize));
     std.mem.sort(isize, right, {}, comptime std.sort.asc(isize));
+
     var sum: isize = 0;
     for (0..left.len) |y| {
         pairs[y] = Pair{ .left = left[y], .right = right[y] };
