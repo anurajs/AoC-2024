@@ -14,15 +14,28 @@ pub fn isSafe(report: []isize) bool {
 }
 
 pub fn isSafeDampened(report: []isize) !bool {
+    const ascending: bool = if (report[0] < report[1]) true else false;
+    if (isSafe(report[1..])) return true;
     var damper_slice = std.ArrayList(isize).init(allocator);
     defer damper_slice.deinit();
-    for (0..report.len) |i| {
-        try damper_slice.appendSlice(report[0..i]);
-        try damper_slice.appendSlice(report[i + 1 ..]);
-        if (isSafe(damper_slice.items)) return true;
-        damper_slice.clearRetainingCapacity();
+    for (1..report.len) |i| {
+        var problem = false;
+        if (ascending and (report[i] - report[i - 1] > 3 or report[i] - report[i - 1] < 1)) {
+            problem = true;
+        } else if (!ascending and (report[i - 1] - report[i] > 3 or report[i - 1] - report[i] < 1)) {
+            problem = true;
+        }
+        if (problem) {
+            try damper_slice.appendSlice(report[0..i]);
+            try damper_slice.appendSlice(report[i + 1 ..]);
+            if (isSafe(damper_slice.items)) return true;
+            damper_slice.clearRetainingCapacity();
+            try damper_slice.appendSlice(report[0 .. i - 1]);
+            try damper_slice.appendSlice(report[i..]);
+            if (isSafe(damper_slice.items)) return true else return false;
+        }
     }
-    return false;
+    return true;
 }
 pub fn solveDayTwo() !void {
     var file = try std.fs.cwd().openFile("./problems/day2.txt", .{});
