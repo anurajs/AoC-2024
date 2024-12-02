@@ -50,14 +50,8 @@ pub fn solveDayOne() !void {
         const right_val = try std.fmt.parseInt(isize, right_str, 0);
         left[i] = left_val;
         right[i] = right_val;
-        const left_entry = try left_map.getOrPut(left_val);
-        const right_entry = try right_map.getOrPut(right_val);
-        if (!left_entry.found_existing) {
-            left_entry.value_ptr.* = 0;
-        }
-        if (!right_entry.found_existing) {
-            right_entry.value_ptr.* = 0;
-        }
+        const left_entry = try left_map.getOrPutValue(left_val, 0);
+        const right_entry = try right_map.getOrPutValue(right_val, 0);
         left_entry.value_ptr.* += 1;
         right_entry.value_ptr.* += 1;
     }
