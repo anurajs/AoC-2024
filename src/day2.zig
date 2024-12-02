@@ -14,8 +14,9 @@ pub fn isSafe(report: []isize) bool {
 }
 
 pub fn isSafeDampened(report: []isize) !bool {
-    const ascending: bool = if (report[0] < report[1]) true else false;
     if (isSafe(report[1..])) return true;
+
+    const ascending: bool = if (report[0] < report[1]) true else false;
     var damper_slice = std.ArrayList(isize).init(allocator);
     defer damper_slice.deinit();
     for (1..report.len) |i| {
