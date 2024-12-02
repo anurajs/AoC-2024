@@ -15,14 +15,9 @@ pub fn isSafe(report: []isize) bool {
 
 pub fn isSafeDampened(report: []isize) !bool {
     const ascending: bool = if (report[0] < report[1]) true else false;
+    if (isSafe(report[1..])) return true;
     var damper_slice = std.ArrayList(isize).init(allocator);
     defer damper_slice.deinit();
-    for (0..report.len) |i| {
-        try damper_slice.appendSlice(report[0..i]);
-        try damper_slice.appendSlice(report[i + 1 ..]);
-        if (isSafe(damper_slice.items)) return true;
-        damper_slice.clearRetainingCapacity();
-    }
     for (1..report.len) |i| {
         if (ascending and (report[i] - report[i - 1] > 3 or report[i] - report[i - 1] < 1)) {
             try damper_slice.appendSlice(report[0..i]);
@@ -31,7 +26,6 @@ pub fn isSafeDampened(report: []isize) !bool {
             damper_slice.clearRetainingCapacity();
             try damper_slice.appendSlice(report[0 .. i - 1]);
             try damper_slice.appendSlice(report[i..]);
-            if (isSafe(damper_slice.items)) return true;
             if (isSafe(damper_slice.items)) return true;
             return false;
         } else if (!ascending and (report[i - 1] - report[i] > 3 or report[i - 1] - report[i] < 1)) {
