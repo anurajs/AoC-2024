@@ -31,12 +31,12 @@ pub fn solveDayThree() !void {
     var sum2: isize = 0;
     var enabled: bool = true;
     while (try mulRegex.captures(input.items[current_index..])) |capture| {
-        const nextDo = std.mem.indexOf(u8, input.items[current_index..], "do()") orelse 2147483647;
-        const nextDont = std.mem.indexOf(u8, input.items[current_index..], "don't()") orelse 2147483647;
-        const nextMult: usize = capture.boundsAt(0).?.lower;
-        if (nextDo < nextMult and nextMult < nextDont) {
+        const next_do = std.mem.indexOf(u8, input.items[current_index..], "do()") orelse 2147483647;
+        const next_dont = std.mem.indexOf(u8, input.items[current_index..], "don't()") orelse 2147483647;
+        const next_mult: usize = capture.boundsAt(0).?.lower;
+        if (next_do < next_mult and next_mult < next_dont) {
             enabled = true;
-        } else if (nextDont < nextMult and nextMult < nextDo) {
+        } else if (next_dont < next_mult and next_mult < next_do) {
             enabled = false;
         }
 
