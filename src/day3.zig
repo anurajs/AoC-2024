@@ -45,7 +45,6 @@ pub fn solveDayThree() !void {
         };
         sum += val.multiply();
         sum2 += if (enabled) val.multiply() else 0;
-        // std.debug.print("enabled: {}, mult: {}\n", .{ enabled, val.multiply() });
         current_index += capture.boundsAt(0).?.upper;
     }
 
