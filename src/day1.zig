@@ -42,7 +42,7 @@ pub fn solveDayOne() !void {
 
     var i: usize = 0;
     while (try in_stream.readUntilDelimiterOrEof(&buf, '\n')) |line| : (i += 1) {
-        var splits = std.mem.split(u8, line, "   ");
+        var splits = std.mem.splitSequence(u8, line, "   ");
         const left_str = splits.next().?;
         const right_str = splits.next().?;
 

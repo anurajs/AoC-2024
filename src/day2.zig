@@ -15,7 +15,6 @@ pub fn isSafe(report: []isize) bool {
 
 pub fn isSafeDampened(report: []isize) !bool {
     if (isSafe(report[1..])) return true;
-
     const ascending: bool = if (report[0] < report[1]) true else false;
     var damper_slice = std.ArrayList(isize).init(allocator);
     defer damper_slice.deinit();
@@ -48,7 +47,7 @@ pub fn solveDayTwo() !void {
     var sum: usize = 0;
     var sum2: usize = 0;
     while (try in_stream.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
-        var split_iterator = std.mem.split(u8, line, " ");
+        var split_iterator = std.mem.splitScalar(u8, line, ' ');
         var report = std.ArrayList(isize).init(allocator);
         defer report.deinit();
         while (split_iterator.next()) |number| {
