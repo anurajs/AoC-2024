@@ -25,17 +25,13 @@ pub fn solveDayThree() !void {
         try input.appendSlice(line);
     }
     var mulRegex = try Regex.compile(allocator, "mul\\((\\d{1,3}),(\\d{1,3})\\)");
-    var doRegex = try Regex.compile(allocator, "do\\(\\)");
-    var dontRegex = try Regex.compile(allocator, "don't\\(\\)");
     var current_index: usize = 0;
     var sum: isize = 0;
     var sum2: isize = 0;
     var enabled: bool = true;
     while (try mulRegex.captures(input.items[current_index..])) |capture| {
-        const doCapture = try doRegex.captures(input.items[current_index..]);
-        const fuckCapture = try dontRegex.captures(input.items[current_index..]);
-        const nextDo: usize = if (doCapture != null) doCapture.?.boundsAt(0).?.upper else 2147483647;
-        const nextDont: usize = if (fuckCapture != null) fuckCapture.?.boundsAt(0).?.upper else 2147483647;
+        const nextDo = std.mem.indexOf(u8, input.items[current_index..], "do()") orelse 2147483647;
+        const nextDont = std.mem.indexOf(u8, input.items[current_index..], "don't()") orelse 2147483647;
         const nextMult: usize = capture.boundsAt(0).?.upper;
         if (nextDo < nextMult and nextMult < nextDont) {
             enabled = true;
