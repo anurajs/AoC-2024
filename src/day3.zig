@@ -25,6 +25,7 @@ pub fn solveDayThree() !void {
         try input.appendSlice(line);
     }
     var mulRegex = try Regex.compile(allocator, "mul\\((\\d{1,3}),(\\d{1,3})\\)");
+    defer mulRegex.deinit();
     var current_index: usize = 0;
     var sum: isize = 0;
     var sum2: isize = 0;
