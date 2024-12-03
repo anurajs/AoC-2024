@@ -35,9 +35,9 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    const regex = b.dependency("regex", .{});
+    const mvzr = b.dependency("mvzr", .{});
 
-    exe.root_module.addImport("regex", regex.module("regex"));
+    exe.root_module.addImport("mvzr", mvzr.module("mvzr"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

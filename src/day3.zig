@@ -1,5 +1,5 @@
 const std = @import("std");
-const Regex = @import("regex").Regex;
+const Re = @import("mvzr");
 const Captures = @import("regex").Captures;
 const allocator = std.heap.page_allocator;
 
@@ -24,29 +24,32 @@ pub fn solveDayThree() !void {
     while (try in_stream.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
         try input.appendSlice(line);
     }
-    var mul_regex = try Regex.compile(allocator, "mul\\((\\d{1,3}),(\\d{1,3})\\)");
-    defer mul_regex.deinit();
+    var mul_re = Re.compile("mul\\((\\d{1,3}),(\\d{1,3})\\)").?;
     var current_index: usize = 0;
     var sum: isize = 0;
     var sum2: isize = 0;
     var enabled: bool = true;
-    while (try mul_regex.captures(input.items[current_index..])) |capture| {
-        const next_do = std.mem.indexOf(u8, input.items[current_index..], "do()") orelse 2147483647;
-        const next_dont = std.mem.indexOf(u8, input.items[current_index..], "don't()") orelse 2147483647;
-        const next_mult: usize = capture.boundsAt(0).?.lower;
+
+    var iterator = mul_re.iterator(input.items);
+    while (iterator.next()) |capture| {
+        var next_do = std.mem.indexOf(u8, input.items[current_index..], "do()") orelse 2147483647;
+        next_do += current_index;
+        var next_dont = std.mem.indexOf(u8, input.items[current_index..], "don't()") orelse 2147483647;
+        next_dont += current_index;
+        const next_mult: usize = capture.start;
         if (next_do < next_mult and next_mult < next_dont) {
             enabled = true;
         } else if (next_dont < next_mult and next_mult < next_do) {
             enabled = false;
         }
-
+        var mul_iter = std.mem.splitScalar(u8, capture.slice[4 .. capture.slice.len - 1], ',');
         const val = Mult{
-            .left = try std.fmt.parseInt(isize, capture.sliceAt(1).?, 10),
-            .right = try std.fmt.parseInt(isize, capture.sliceAt(2).?, 10),
+            .left = try std.fmt.parseInt(isize, mul_iter.next().?, 10),
+            .right = try std.fmt.parseInt(isize, mul_iter.next().?, 10),
         };
         sum += val.multiply();
         sum2 += if (enabled) val.multiply() else 0;
-        current_index += capture.boundsAt(0).?.upper;
+        current_index = capture.end;
     }
 
     std.debug.print("Answer to part 1 is: {}\n", .{sum});

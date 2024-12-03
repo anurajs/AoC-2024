@@ -23,9 +23,9 @@
     // Once all dependencies are fetched, `zig build` no longer requires
     // internet connectivity.
     .dependencies = .{
-        .regex = .{
-            .url = "https://github.com/tiehuis/zig-regex/archive/7bc0fd777c3b92c51a94531439e5913bda24030c.tar.gz",
-            .hash = "1220b497739b6fd60f627da85862cbd0cec01f3d6b7ddaa923057a7999ecfa138704",
+        .mvzr = .{
+            .url = "https://github.com/mnemnion/mvzr/archive/refs/tags/v0.3.1.tar.gz",
+            .hash = "1220b15a8c90d7b5af5d12781e45336147cd09e06028b9ecd7461f15970d8670a0ae",
         },
     },
     .paths = .{
