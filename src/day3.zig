@@ -32,7 +32,7 @@ pub fn solveDayThree() !void {
     while (try mulRegex.captures(input.items[current_index..])) |capture| {
         const nextDo = std.mem.indexOf(u8, input.items[current_index..], "do()") orelse 2147483647;
         const nextDont = std.mem.indexOf(u8, input.items[current_index..], "don't()") orelse 2147483647;
-        const nextMult: usize = capture.boundsAt(0).?.upper;
+        const nextMult: usize = capture.boundsAt(0).?.lower;
         if (nextDo < nextMult and nextMult < nextDont) {
             enabled = true;
         } else if (nextDont < nextMult and nextMult < nextDo) {
