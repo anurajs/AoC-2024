@@ -24,13 +24,13 @@ pub fn solveDayThree() !void {
     while (try in_stream.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
         try input.appendSlice(line);
     }
-    var mulRegex = try Regex.compile(allocator, "mul\\((\\d{1,3}),(\\d{1,3})\\)");
-    defer mulRegex.deinit();
+    var mul_regex = try Regex.compile(allocator, "mul\\((\\d{1,3}),(\\d{1,3})\\)");
+    defer mul_regex.deinit();
     var current_index: usize = 0;
     var sum: isize = 0;
     var sum2: isize = 0;
     var enabled: bool = true;
-    while (try mulRegex.captures(input.items[current_index..])) |capture| {
+    while (try mul_regex.captures(input.items[current_index..])) |capture| {
         const next_do = std.mem.indexOf(u8, input.items[current_index..], "do()") orelse 2147483647;
         const next_dont = std.mem.indexOf(u8, input.items[current_index..], "don't()") orelse 2147483647;
         const next_mult: usize = capture.boundsAt(0).?.lower;
