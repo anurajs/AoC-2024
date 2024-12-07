@@ -30,7 +30,7 @@ def isSolvable(problem: Problem) -> bool:
         or isSolvable(
             Problem(
                 problem.target,
-                [int(str(problem.operands[0]) + str(problem.operands[1]))]
+                [int(f"{problem.operands[0]}{problem.operands[1]}")]
                 + problem.operands[2:],
             )
         )
