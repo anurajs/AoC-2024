@@ -8,6 +8,8 @@ class Problem:
 
 
 def isSolvable(problem: Problem) -> bool:
+    if problem.operands[0] > problem.target:
+        return False
     if len(problem.operands) == 1 and problem.operands[0] == problem.target:
         return True
     elif len(problem.operands) == 1 and problem.operands[0] != problem.target:
